@@ -1,24 +1,7 @@
-<p align="center">
-<a href="https://github.com/yonaskolb/XcodeGen">
-<img src="Assets/Logo_animated.gif" alt="XcodeGen" />
-</a>
-</p>
-<p align="center">
-  <a href="https://github.com/yonaskolb/XcodeGen/releases">
-    <img src="https://img.shields.io/github/release/yonaskolb/xcodegen.svg"/>
-  </a>
-  <a href="https://swiftpackageindex.com/yonaskolb/XcodeGen">
-    <img src="https://img.shields.io/endpoint?url=https%3A%2F%2Fswiftpackageindex.com%2Fapi%2Fpackages%2Fyonaskolb%2FXcodeGen%2Fbadge%3Ftype%3Dplatforms" alt="Swift Package Manager Platforms" />
-  </a>
-  <a href="https://swiftpackageindex.com/yonaskolb/XcodeGen">
-    <img src="https://img.shields.io/endpoint?url=https%3A%2F%2Fswiftpackageindex.com%2Fapi%2Fpackages%2Fyonaskolb%2FXcodeGen%2Fbadge%3Ftype%3Dswift-versions" alt="Swift Versions" />
-  </a>
-  <a href="https://github.com/yonaskolb/XcodeGen/blob/master/LICENSE">
-    <img src="https://img.shields.io/github/license/yonaskolb/XcodeGen.svg"/>
-  </a>
-</p>
-
 # XcodeGen
+
+**Fork from 2.38.0** https://github.com/yonaskolb/XcodeGen
+Applies fixes, see: CHANGELOG.md
 
 XcodeGen is a command line tool written in Swift that generates your Xcode project using your folder structure and a project spec.
 

@@ -13,7 +13,7 @@ public struct SpecFile {
     /// The relative path to use when resolving paths in the json dictionary. Is an empty path when
     /// included with relativePaths disabled.
     private let relativePath: Path
-    
+
     /// The path to the file relative to the basePath.
     private let filePath: Path
 
@@ -53,7 +53,7 @@ public struct SpecFile {
             dictionary[key] as? Bool ?? (dictionary[key] as? NSString)?.boolValue
         }
     }
-    
+
     /// Create a SpecFile for a Project
     /// - Parameters:
     ///   - path: The absolute path to the spec file
@@ -63,25 +63,26 @@ public struct SpecFile {
         let basePath = projectRoot ?? path.parent()
         let filePath = try path.relativePath(from: basePath)
         var cachedSpecFiles: [Path: SpecFile] = [:]
-        
+
         try self.init(filePath: filePath, basePath: basePath, cachedSpecFiles: &cachedSpecFiles, variables: variables)
     }
-    
-    /// Memberwise initializer for SpecFile
-    public init(filePath: Path, jsonDictionary: JSONDictionary, basePath: Path = "", relativePath: Path = "", subSpecs: [SpecFile] = []) {
-        self.basePath = basePath
-        self.relativePath = relativePath
-        self.jsonDictionary = jsonDictionary
-        self.subSpecs = subSpecs
-        self.filePath = filePath
-    }
 
-    private init(include: Include, basePath: Path, relativePath: Path, cachedSpecFiles: inout [Path: SpecFile], variables: [String: String]) throws {
-        let basePath = include.relativePaths ? (basePath + relativePath) : basePath
-        let relativePath = include.relativePaths ? include.path.parent() : Path()
+	/// Memberwise initializer for SpecFile
+	public init(filePath: Path, jsonDictionary: JSONDictionary, basePath: Path = "", relativePath: Path = "", subSpecs: [SpecFile] = []) {
+		self.basePath = basePath
+		self.relativePath = relativePath
+		self.jsonDictionary = jsonDictionary
+		self.subSpecs = subSpecs
+		self.filePath = filePath
+	}
 
-        try self.init(filePath: include.path, basePath: basePath, cachedSpecFiles: &cachedSpecFiles, variables: variables, relativePath: relativePath)
-    }
+	private init(include: Include, parentPath: Path, basePath: Path, relativePath: Path, cachedSpecFiles: inout [Path: SpecFile], variables: [String: String]) throws {
+		let basePath = include.relativePaths ? (basePath + relativePath) : basePath
+		let relativePath = include.relativePaths ? include.path.parent() : Path()
+		let includePath = include.relativePaths ? parentPath + relativePath + include.path.lastComponent : parentPath + include.path
+
+		try self.init(filePath: includePath, basePath: basePath, cachedSpecFiles: &cachedSpecFiles, variables: variables, relativePath: relativePath)
+	}
 
     private init(filePath: Path, basePath: Path, cachedSpecFiles: inout [Path: SpecFile], variables: [String: String], relativePath: Path = "") throws {
         let path = basePath + filePath
@@ -96,7 +97,7 @@ public struct SpecFile {
         let subSpecs: [SpecFile] = try includes
             .filter(\.enable)
             .map { include in
-                return try SpecFile(include: include, basePath: basePath, relativePath: relativePath, cachedSpecFiles: &cachedSpecFiles, variables: variables)
+				return try SpecFile(include: include, parentPath: path.parent(), basePath: basePath, relativePath: relativePath, cachedSpecFiles: &cachedSpecFiles, variables: variables)
             }
 
         self.init(filePath: filePath, jsonDictionary: jsonDictionary, basePath: basePath, relativePath: relativePath, subSpecs: subSpecs)
