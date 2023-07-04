@@ -361,7 +361,7 @@ public class PBXProjGenerator {
 
     func generateTargetDependency(from: String, to target: String, platform: String?, platforms: [String]?) -> PBXTargetDependency {
         guard let targetObject = targetObjects[target] ?? targetAggregateObjects[target] else {
-            fatalError("Target dependency not found: from ( \(from) ) to ( \(target) )")
+            fatalError("Target dependency not found: from ( \(from) ) to ( \(target) ). targetObjects: \(dump(targetObjects)). targetObjects: \(targetObjects)")
         }
 
         let targetProxy = addObject(
@@ -996,6 +996,18 @@ public class PBXProjGenerator {
                     addPackageProductDependency(named: dependency.reference)
                 }
             case .bundle:
+                let dependencyTargetReference = try TargetReference(dependency.reference)
+                switch dependencyTargetReference.location {
+                case .local:
+                    let dependencyTargetName = dependency.reference
+                    let targetDependency = generateTargetDependency(from: target.name, to: dependencyTargetName, platform: platform, platforms: platforms)
+                    dependencies.append(targetDependency)
+                case .project(let dependencyProjectName):
+                    let dependencyTargetName = dependencyTargetReference.name
+                    let (targetDependency, _, _) = try generateExternalTargetDependency(from: target.name, to: dependencyTargetName, in: dependencyProjectName, platform: target.platform)
+                    dependencies.append(targetDependency)
+                }
+                
                 // Static and dynamic libraries can't copy resources
                 guard target.type != .staticLibrary && target.type != .dynamicLibrary else { break }
 
