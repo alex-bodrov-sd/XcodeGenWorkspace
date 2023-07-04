@@ -1,19 +1,17 @@
 # Change Log
 
-## Next Version
+## 2.35.0-fixed-dx
 
-### Added
-
-### Fixed
-
-- Fix external dependencies from being removed by Xcode #1354 @OdNairy
+- Package changed to exact dependencies: SemVer misused, patch versions breaks compatibility (XcodeProj.git > "8.9.0")
+- raise condition in SettingsBuilder: NSCacheExtensions.swift added
+- transient include behavior degradation: SpecFile.swift computes includePath with parentPath argument
 
 ## 2.35.0
 
 ### Added
 
 - Added support for shared breakpoints #177 @alexruperez @myihsan
-- Added support for `putResourcesBeforeSourcesBuildPhase` in a target #1351 @mat1th
+- Added support for `putResourcesBeforeSourcesBuildPhase` in a target #1351 @mat1th 
 
 ### Fixed
 
